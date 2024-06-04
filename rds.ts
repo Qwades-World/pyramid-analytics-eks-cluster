@@ -1,5 +1,6 @@
 import * as aws from "@pulumi/aws";
 import { securityGroup, subnet1, subnet2 } from "./networking";
+import { eksVpc } from "./networking";
 
 // Create an RDS PostgreSQL instance
 export const rds = new aws.rds.Instance("mypostgresinstance", {
