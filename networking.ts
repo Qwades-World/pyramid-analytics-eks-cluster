@@ -11,6 +11,7 @@ export const eksVpc = new awsx.ec2.Vpc("pyramid-eks-vpc", {
     cidrBlock: vpcNetworkCidr,
 });
 
+/*
 // Create subnets
 export const subnet1 = new aws.ec2.Subnet("mySubnet1", {
     vpcId: eksVpc.vpcId,
@@ -29,13 +30,14 @@ export const subnet2 = new aws.ec2.Subnet("mySubnet2", {
         Name: "pyramid-subnet-2",
     },
 });
+*/
 
 // Create a security group that allows ingress from the subnets
 export const securityGroup = new aws.ec2.SecurityGroup("rds-security-group", {
     vpcId: eksVpc.vpcId,
     description: "Allow cluster access to rds instance",
     ingress: [
-        { protocol: "tcp", fromPort: 5432, toPort: 5432, cidrBlocks: ["192.168.0.0/16"] },
+        { protocol: "tcp", fromPort: 5432, toPort: 5432, cidrBlocks: [vpcNetworkCidr] },
     ],
     egress: [
         { protocol: "tcp", fromPort: 0, toPort: 0, cidrBlocks: ["0.0.0.0/0"] },
