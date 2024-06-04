@@ -1,0 +1,8 @@
+config:
+  aws:region: us-east-1
+  pulumi:template: kubernetes-aws-typescript
+  pyramid-analytics-eks-cluster:desiredClusterSize: "2"
+  pyramid-analytics-eks-cluster:eksNodeInstanceType: t3.medium
+  pyramid-analytics-eks-cluster:maxClusterSize: "4"
+  pyramid-analytics-eks-cluster:minClusterSize: "2"
+  pyramid-analytics-eks-cluster:vpcNetworkCidr: 192.168.0.0/16
