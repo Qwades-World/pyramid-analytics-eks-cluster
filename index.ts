@@ -1,6 +1,7 @@
 import * as pulumi from "@pulumi/pulumi";
-import * as awsx from "@pulumi/awsx";
 import * as eks from "@pulumi/eks";
+import { rds } from "./rds";
+import { eksVpc } from "./networking";
 
 // Grab some values from the Pulumi configuration (or use default values)
 const config = new pulumi.Config();
@@ -8,16 +9,9 @@ const minClusterSize = config.getNumber("minClusterSize") || 3;
 const maxClusterSize = config.getNumber("maxClusterSize") || 6;
 const desiredClusterSize = config.getNumber("desiredClusterSize") || 3;
 const eksNodeInstanceType = config.get("eksNodeInstanceType") || "t3.medium";
-const vpcNetworkCidr = config.get("vpcNetworkCidr") || "10.0.0.0/16";
-
-// Create a new VPC
-const eksVpc = new awsx.ec2.Vpc("eks-vpc", {
-    enableDnsHostnames: true,
-    cidrBlock: vpcNetworkCidr,
-});
 
 // Create the EKS cluster
-const eksCluster = new eks.Cluster("eks-cluster", {
+const eksCluster = new eks.Cluster("pyramid-eks-cluster", {
     // Put the cluster in the new VPC created earlier
     vpcId: eksVpc.vpcId,
     // Public subnets will be used for load balancers
@@ -39,3 +33,5 @@ const eksCluster = new eks.Cluster("eks-cluster", {
 // Export some values for use elsewhere
 export const kubeconfig = eksCluster.kubeconfig;
 export const vpcId = eksVpc.vpcId;
+export const rdsEndpoint = rds.endpoint;
+export const rdsPort = rds.port;
