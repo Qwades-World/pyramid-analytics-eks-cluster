@@ -21,7 +21,8 @@ const ubuntu = aws.ec2.getAmi({
 });
 
 const ebsVol = new aws.ebs.Volume("pyramid-imdb-001", {
-  availabilityZone: "us-east-1b",
+  availabilityZone: "us-east-1b", 
+  type: "gp3",
   finalSnapshot: true,
   size: 100,
   tags: {
@@ -31,8 +32,8 @@ const ebsVol = new aws.ebs.Volume("pyramid-imdb-001", {
 
 export const awsInstanceResource = new aws.ec2.Instance("pyramid-imdb-instance", {    
     ami: ubuntu.then((ubuntu) => ubuntu.id),
-    associatePublicIpAddress: false,
-    availabilityZone: "us-east-1b",
+    associatePublicIpAddress: true,
+    availabilityZone: "us-east-1b", 
     disableApiStop: false,
     disableApiTermination: true,
     ebsOptimized: true,
@@ -48,14 +49,14 @@ export const awsInstanceResource = new aws.ec2.Instance("pyramid-imdb-instance",
         volumeSize: 50,
         volumeType: "gp3",
     },
-    subnetId: eksVpc.privateSubnetIds[0],
+    subnetId: eksVpc.privateSubnetIds[1],
     tags: {
         string: "env:production",
     },
     vpcSecurityGroupIds: [securityGroup.id],
 });
 
-const ebsAtt = new aws.ec2.VolumeAttachment("pyramid-imdb-001-attach", {
+export const ebsAtt = new aws.ec2.VolumeAttachment("pyramid-imdb-001-attach", {
   deviceName: "/dev/sdh",
   volumeId: ebsVol.id,
   instanceId: awsInstanceResource.id,
