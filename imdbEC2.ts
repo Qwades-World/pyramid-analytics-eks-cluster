@@ -1,6 +1,7 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
 import { eksVpc, securityGroup } from "./networking";
+import { userData } from "./userData";
 
 const config = new pulumi.Config();
 const ec2KeyName = config.get("ec2KeyName");
@@ -26,7 +27,8 @@ const ebsVol = new aws.ebs.Volume("pyramid-imdb-001", {
   finalSnapshot: true,
   size: 100,
   tags: {
-      Name: "Pyramid-IMDB-Volume-001",
+    Name: "Pyramid-IMDB-Volume-001",
+    Environment: "production",
   },
 });
 
@@ -39,6 +41,7 @@ export const awsInstanceResource = new aws.ec2.Instance("pyramid-imdb-instance",
     ebsOptimized: true,
     instanceType: "t3.2xlarge",
     keyName: ec2KeyName,
+    userData: userData,
     monitoring: true,
     rootBlockDevice: {
         deleteOnTermination: false,
@@ -51,8 +54,10 @@ export const awsInstanceResource = new aws.ec2.Instance("pyramid-imdb-instance",
     },
     subnetId: eksVpc.privateSubnetIds[1],
     tags: {
-        string: "env:production",
+      Name: "Pyramid IMDB Instance",
+      Environment: "production",
     },
+    userData: userData,
     vpcSecurityGroupIds: [securityGroup.id],
 });
 
