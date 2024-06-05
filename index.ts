@@ -7,3 +7,4 @@ export const kubeconfig = eksCluster.kubeconfig;
 export const vpcId = eksVpc.vpcId;
 export const rdsEndpoint = rds.endpoint;
 export const rdsPort = rds.port;
+export const ec2Instance = eksCluster.ec2Instance;
