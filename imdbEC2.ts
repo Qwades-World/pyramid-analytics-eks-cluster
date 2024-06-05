@@ -57,7 +57,6 @@ export const awsInstanceResource = new aws.ec2.Instance("pyramid-imdb-instance",
       Name: "Pyramid IMDB Instance",
       Environment: "production",
     },
-    userData: userData,
     vpcSecurityGroupIds: [securityGroup.id],
 });
 
