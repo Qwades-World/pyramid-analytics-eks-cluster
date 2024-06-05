@@ -3,7 +3,7 @@ import * as aws from "@pulumi/aws";
 import { eksVpc, securityGroup } from "./networking";
 
 const config = new pulumi.Config();
-const dbName = config.get("rdsDatabase");
+const ec2KeyName = config.get("ec2KeyName");
 
 const ubuntu = aws.ec2.getAmi({
   mostRecent: true,
@@ -37,7 +37,7 @@ export const awsInstanceResource = new aws.ec2.Instance("pyramid-imdb-instance",
     disableApiTermination: true,
     ebsOptimized: true,
     instanceType: "t3.2xlarge",
-    keyName: "deployer-wade-000",
+    keyName: ec2KeyName,
     monitoring: true,
     rootBlockDevice: {
         deleteOnTermination: false,
@@ -49,9 +49,9 @@ export const awsInstanceResource = new aws.ec2.Instance("pyramid-imdb-instance",
         volumeSize: 50,
         volumeType: "gp3",
     },
-    subnetIds: eksVpc.privateSubnetIds,
+    subnetId: eksVpc.privateSubnetIds[0],
     tags: {
-        string: "string",
+        string: "env:production",
     },
     vpcSecurityGroupIds: [securityGroup.id],
 });
