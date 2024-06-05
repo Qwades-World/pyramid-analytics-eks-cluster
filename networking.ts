@@ -12,7 +12,7 @@ export const eksVpc = new awsx.ec2.Vpc("pyramid-eks-vpc", {
 });
 
 // Create a security group that allows access to the RDS instance from the EKS cluster
-export const securityGroup = new aws.ec2.SecurityGroup("rds-security-group", {
+export const securityGroup = new aws.ec2.SecurityGroup("pyramid-rds-sg", {
     vpcId: eksVpc.vpcId,
     description: "Allow cluster access to rds instance",
     ingress: [
