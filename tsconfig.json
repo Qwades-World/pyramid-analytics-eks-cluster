@@ -12,5 +12,5 @@
     "noImplicitReturns": true,
     "forceConsistentCasingInFileNames": true
   },
-  "files": ["index.ts", "rds.ts"]
+  "files": ["index.ts", "./rds.ts", "./eksCluster.ts"]
 }
