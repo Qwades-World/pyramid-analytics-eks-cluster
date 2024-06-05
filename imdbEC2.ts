@@ -41,7 +41,6 @@ export const awsInstanceResource = new aws.ec2.Instance("pyramid-imdb-instance",
     monitoring: true,
     rootBlockDevice: {
         deleteOnTermination: false,
-        deviceName: "/dev/sda1",
         encrypted: false,
         tags: {
             string: "env:production",
