@@ -6,3 +6,6 @@ config:
   pyramid-analytics-eks-cluster:maxClusterSize: "5"
   pyramid-analytics-eks-cluster:minClusterSize: "3"
   pyramid-analytics-eks-cluster:vpcNetworkCidr: 192.168.0.0/16
+  pyramid-analytics-eks-cluster:rdsUsername: "pyramid"
+  pyramid-analytics-eks-cluster:rdsPassword: "Password123"
+  pyramid-analytics-eks-cluster:rdsDatabase: "pyramid"
