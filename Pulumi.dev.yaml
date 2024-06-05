@@ -13,3 +13,6 @@ config:
   pyramid-analytics-eks-cluster:rdsUsername: "pyramid"
   pyramid-analytics-eks-cluster:rdsPassword: "Password123"
   pyramid-analytics-eks-cluster:rdsDatabase: "pyramid"
+
+  # EC2 Configuration
+  pyramid-analytics-eks-cluster:ec2KeyName: "deployer-wade-000"
