@@ -9,7 +9,7 @@ const dbUsername = config.get("rdsUsername");
 const dbPassword = config.get("rdsPassword");
 
 // Create an RDS PostgreSQL instance
-export const rds = new aws.rds.Instance("pyramidRDSinstance", {
+export const rds = new aws.rds.Instance("pyramid-rds-instance", {
     engine: "postgres",
     instanceClass: "db.t3.micro",
     allocatedStorage: 20,
