@@ -28,5 +28,6 @@ export const securityGroup = new aws.ec2.SecurityGroup("pyramid-rds-sg", {
     ],
     tags: {
         Name: "pyramid-rds-security-group",
+        Environment: "production",
     },
 });
