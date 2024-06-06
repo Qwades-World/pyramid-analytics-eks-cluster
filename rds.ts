@@ -1,6 +1,6 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
-import { securityGroup } from "./networking";
+import { securityGroupRDS } from "./networking";
 import { eksVpc } from "./networking";
 
 const config = new pulumi.Config();
@@ -16,7 +16,7 @@ export const rds = new aws.rds.Instance("pyramid-rds-instance", {
     dbName: dbName,
     username: dbUsername,
     password: dbPassword,
-    vpcSecurityGroupIds: [securityGroup.id],
+    vpcSecurityGroupIds: [securityGroupRDS.id],
     dbSubnetGroupName: new aws.rds.SubnetGroup("pyramid-subnet-group", {
         subnetIds: eksVpc.privateSubnetIds,
         description: "RDS Subnet Group",
