@@ -5,7 +5,8 @@ import * as awsx from "@pulumi/awsx";
 // Retrieve configuration values with defaults
 const config = new pulumi.Config();
 const vpcNetworkCidr = config.get("vpcNetworkCidr") || "10.0.0.0/16";
-const mySSHAccess = config.get("mySshAccess") || "0.0.0.0/0";
+const extSshAccess = config.get("extSshAccess") || "0.0.0.0/0";
+const intSshAccess = config.get("intSshAccess") || "192.168.0.0/16";
 
 // Create a new VPC to host the EKS cluster
 export const eksVpc = new awsx.ec2.Vpc("pyramid-eks-vpc", {
@@ -35,7 +36,8 @@ export const securityGroupEC2 = new aws.ec2.SecurityGroup("pyramid-ec2-sg", {
     vpcId: eksVpc.vpcId,
     description: "Allow external SSH access to EC2",
     ingress: [
-        { protocol: "tcp", fromPort: 22, toPort: 22, cidrBlocks: [mySSHAccess] }, // Allow SSH access
+        { protocol: "tcp", fromPort: 22, toPort: 22, cidrBlocks: [extSshAccess] }, // Allow SSH access from the internet
+        { protocol: "tcp", fromPort: 22, toPort: 22, cidrBlocks: [intSshAccess] }, // Allow SSH access from the internal network
     ],
     egress: [
         { protocol: "tcp", fromPort: 0, toPort: 0, cidrBlocks: ["0.0.0.0/0"] }, // Allow all outbound traffic
