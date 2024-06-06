@@ -52,7 +52,7 @@ export const awsInstanceResource = new aws.ec2.Instance("pyramid-imdb-instance",
         volumeSize: 50,
         volumeType: "gp3",
     },
-    subnetId: eksVpc.privateSubnetIds[1],
+    subnetId: eksVpc.publicSubnetIds[1],
     tags: {
       Name: "Pyramid IMDB Instance",
       Environment: "production",
