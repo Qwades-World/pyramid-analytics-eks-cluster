@@ -33,7 +33,7 @@ export const securityGroupRDS = new aws.ec2.SecurityGroup("pyramid-rds-sg", {
 
 export const securityGroupEC2 = new aws.ec2.SecurityGroup("pyramid-ec2-sg", {
     vpcId: eksVpc.vpcId,
-    description: "Allow cluster access to rds instance",
+    description: "Allow external SSH access to EC2",
     ingress: [
         { protocol: "tcp", fromPort: 22, toPort: 22, cidrBlocks: [mySSHAccess] }, // Allow SSH access
     ],
