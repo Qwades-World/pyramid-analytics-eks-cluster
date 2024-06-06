@@ -1,6 +1,6 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
-import { eksVpc, securityGroup } from "./networking";
+import { eksVpc, securityGroupEC2 } from "./networking";
 import { userData } from "./userData";
 
 const config = new pulumi.Config();
@@ -57,7 +57,7 @@ export const awsInstanceResource = new aws.ec2.Instance("pyramid-imdb-instance",
       Name: "Pyramid IMDB Instance",
       Environment: "production",
     },
-    vpcSecurityGroupIds: [securityGroup.id],
+    vpcSecurityGroupIds: [securityGroupEC2.id],
 });
 
 export const ebsAtt = new aws.ec2.VolumeAttachment("pyramid-imdb-001-attach", {
