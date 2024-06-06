@@ -24,4 +24,10 @@ export const eksCluster = new eks.Cluster("pyramid-eks-cluster", {
     nodeAssociatePublicIpAddress: false,
     endpointPrivateAccess: false,
     endpointPublicAccess: true,
+    enabledClusterLogTypes: [
+        "api",
+        "audit",
+        "authenticator",
+    ],
+    version: "1.30",
 });

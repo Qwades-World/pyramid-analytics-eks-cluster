@@ -32,6 +32,12 @@ const ebsVol = new aws.ebs.Volume("pyramid-imdb-001", {
   },
 });
 
+const enforce_imdsv2 = new aws.ec2.InstanceMetadataDefaults("enforce-imdsv2", {
+    httpTokens: "required",
+    httpPutResponseHopLimit: 1,
+    httpEndpoint: "enabled",
+});
+
 export const awsInstanceResource = new aws.ec2.Instance("pyramid-imdb-instance", {    
     ami: ubuntu.then((ubuntu) => ubuntu.id),
     associatePublicIpAddress: true,
@@ -43,6 +49,10 @@ export const awsInstanceResource = new aws.ec2.Instance("pyramid-imdb-instance",
     keyName: ec2KeyName,
     userData: userData,
     monitoring: true,
+    metadataOptions: {
+      httpEndpoint: "enabled",
+      httpTokens: "required",
+    },
     rootBlockDevice: {
         deleteOnTermination: false,
         encrypted: false,
