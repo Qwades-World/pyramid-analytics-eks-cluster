@@ -32,6 +32,7 @@ export const securityGroupRDS = new aws.ec2.SecurityGroup("pyramid-rds-sg", {
     },
 });
 
+// Create a security group that allows SSH access to the EC2 instanc
 export const securityGroupEC2 = new aws.ec2.SecurityGroup("pyramid-ec2-sg", {
     vpcId: eksVpc.vpcId,
     description: "Allow external SSH access to EC2",
