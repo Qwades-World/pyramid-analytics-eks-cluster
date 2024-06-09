@@ -37,48 +37,48 @@ const ebsVol = new aws.ebs.Volume("pyramid-imdb-001", {
 
 // Enforce IMDSv2
 const enforce_imdsv2 = new aws.ec2.InstanceMetadataDefaults("enforce-imdsv2", {
-    httpTokens: "required",
-    httpPutResponseHopLimit: 1,
-    httpEndpoint: "enabled",
+  httpTokens: "required",
+  httpPutResponseHopLimit: 1,
+  httpEndpoint: "enabled",
 });
 
 // Create EC2 instance for IMDB data
-export const awsInstanceResource = new aws.ec2.Instance("pyramid-imdb-instance", {    
-    ami: ubuntu.then((ubuntu) => ubuntu.id),
-    associatePublicIpAddress: true,
-    availabilityZone: "us-east-1b", 
-    disableApiStop: false,
-    disableApiTermination: true,
-    ebsOptimized: true,
-    instanceType: "t3.2xlarge",
-    keyName: ec2KeyName,
-    userData: userData,
-    monitoring: true,
-    metadataOptions: {
-      httpEndpoint: "enabled",
-      httpTokens: "required",
-    },
-    rootBlockDevice: {
-        deleteOnTermination: false,
-        encrypted: false,
-        tags: {
-            string: "env:production",
-        },
-        volumeSize: 50,
-        volumeType: "gp3",
-    },
-    subnetId: eksVpc.publicSubnetIds[1],
+export const awsInstanceResource = new aws.ec2.Instance("pyramid-imdb-instance", {
+  ami: ubuntu.then((ubuntu) => ubuntu.id),
+  associatePublicIpAddress: true,
+  availabilityZone: "us-east-1b",
+  disableApiStop: false,
+  disableApiTermination: true,
+  ebsOptimized: true,
+  instanceType: "t3.2xlarge",
+  keyName: ec2KeyName,
+  metadataOptions: {
+    httpEndpoint: "enabled",
+    httpTokens: "required",
+  },
+  monitoring: true,
+  rootBlockDevice: {
+    deleteOnTermination: false,
+    encrypted: false,
     tags: {
-      Name: "Pyramid IMDB Instance",
-      Environment: "production",
+      string: "env:production",
     },
-    vpcSecurityGroupIds: [securityGroupEC2.id],
+    volumeSize: 50,
+    volumeType: "gp3",
+  },
+  subnetId: eksVpc.publicSubnetIds[1],
+  tags: {
+    Name: "Pyramid IMDB Instance",
+    Environment: "production",
+  },
+  userData: userData,
+  vpcSecurityGroupIds: [securityGroupEC2.id],
 });
 
 // Attach IMDB data volume to EC2 instance
 export const ebsAtt = new aws.ec2.VolumeAttachment("pyramid-imdb-001-attach", {
   deviceName: "/dev/sdh",
-  volumeId: ebsVol.id,
   instanceId: awsInstanceResource.id,
   stopInstanceBeforeDetaching: true,
+  volumeId: ebsVol.id,
 });
