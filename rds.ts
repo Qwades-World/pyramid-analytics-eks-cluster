@@ -3,6 +3,7 @@ import * as aws from "@pulumi/aws";
 import { securityGroupRDS } from "./networking";
 import { eksVpc } from "./networking";
 
+// Get config values for RDS database
 const config = new pulumi.Config();
 const dbName = config.get("rdsDatabase");
 const dbUsername = config.get("rdsUsername");
