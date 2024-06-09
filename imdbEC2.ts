@@ -3,9 +3,11 @@ import * as aws from "@pulumi/aws";
 import { eksVpc, securityGroupEC2 } from "./networking";
 import { userData } from "./userData";
 
+// Get the EC2 key name
 const config = new pulumi.Config();
 const ec2KeyName = config.get("ec2KeyName");
 
+// Get the latest Ubuntu 20.04 AMI
 const ubuntu = aws.ec2.getAmi({
   mostRecent: true,
   filters: [
@@ -21,8 +23,9 @@ const ubuntu = aws.ec2.getAmi({
   owners: ["099720109477"],
 });
 
+// Create volume for IMDB data
 const ebsVol = new aws.ebs.Volume("pyramid-imdb-001", {
-  availabilityZone: "us-east-1b", 
+  availabilityZone: "us-east-1b",
   type: "gp3",
   finalSnapshot: true,
   size: 100,
@@ -32,12 +35,14 @@ const ebsVol = new aws.ebs.Volume("pyramid-imdb-001", {
   },
 });
 
+// Enforce IMDSv2
 const enforce_imdsv2 = new aws.ec2.InstanceMetadataDefaults("enforce-imdsv2", {
     httpTokens: "required",
     httpPutResponseHopLimit: 1,
     httpEndpoint: "enabled",
 });
 
+// Create EC2 instance for IMDB data
 export const awsInstanceResource = new aws.ec2.Instance("pyramid-imdb-instance", {    
     ami: ubuntu.then((ubuntu) => ubuntu.id),
     associatePublicIpAddress: true,
@@ -70,6 +75,7 @@ export const awsInstanceResource = new aws.ec2.Instance("pyramid-imdb-instance",
     vpcSecurityGroupIds: [securityGroupEC2.id],
 });
 
+// Attach IMDB data volume to EC2 instance
 export const ebsAtt = new aws.ec2.VolumeAttachment("pyramid-imdb-001-attach", {
   deviceName: "/dev/sdh",
   volumeId: ebsVol.id,
