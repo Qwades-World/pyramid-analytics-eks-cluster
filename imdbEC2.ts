@@ -27,7 +27,7 @@ const ubuntu = aws.ec2.getAmi({
 const ebsVol = new aws.ebs.Volume("pyramid-imdb-001", {
   availabilityZone: "us-east-1b",
   type: "gp3",
-  finalSnapshot: true,
+  finalSnapshot: false,
   size: 100,
   tags: {
     Name: "Pyramid-IMDB-Volume-001",
@@ -58,10 +58,11 @@ export const awsInstanceResource = new aws.ec2.Instance("pyramid-imdb-instance",
   },
   monitoring: true,
   rootBlockDevice: {
-    deleteOnTermination: false,
+    deleteOnTermination: true,
     encrypted: false,
     tags: {
-      string: "env:production",
+      Environment: "production",
+      Name: "Pyramid-Root-Volume-001",
     },
     volumeSize: 50,
     volumeType: "gp3",
