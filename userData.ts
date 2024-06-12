@@ -1,5 +1,9 @@
 export const userData = `#!/bin/bash
+sudo curl -sSL -O https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
+sudo dpkg -i packages-microsoft-prod.deb
+sudo rm packages-microsoft-prod.deb
 sudo apt-get update -y
+sudo apt-get install -y apt-transport-https apt-tools dotnet-runtime-6.0
 sudo mkdir /pyramid
 sudo parted /dev/nvme1n1 --script mklabel gpt
 sudo parted /dev/nvme1n1 --script mkpart primary ext4 1% 100%
