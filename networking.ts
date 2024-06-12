@@ -23,7 +23,7 @@ export const securityGroupRDS = new aws.ec2.SecurityGroup("pyramid-rds-sg", {
         { protocol: "tcp", fromPort: 5432, toPort: 5432, cidrBlocks: [vpcNetworkCidr] }, // Allow PostgreSQL access
     ],
     egress: [
-        { protocol: "tcp", fromPort: 0, toPort: 0, cidrBlocks: ["0.0.0.0/0"] }, // Allow all outbound traffic
+        { protocol: "-1", fromPort: 0, toPort: 0, cidrBlocks: ["0.0.0.0/0"] }, // Allow all outbound traffic
     ],
     tags: {
         Name: "pyramid-rds-security-group",
@@ -40,7 +40,7 @@ export const securityGroupEC2 = new aws.ec2.SecurityGroup("pyramid-ec2-sg", {
         { protocol: "tcp", fromPort: 22, toPort: 22, cidrBlocks: [intSshAccess] }, // Allow SSH access from the internal network
     ],
     egress: [
-        { protocol: "tcp", fromPort: 0, toPort: 0, cidrBlocks: ["0.0.0.0/0"] }, // Allow all outbound traffic
+        { protocol: "-1", fromPort: 0, toPort: 0, cidrBlocks: ["0.0.0.0/0"] }, // Allow all outbound traffic
     ],
     tags: {
         Name: "pyramid-ec2-security-group",
