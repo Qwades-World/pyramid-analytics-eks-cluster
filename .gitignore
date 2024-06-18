@@ -1,5 +1,5 @@
 /node_modules/
-Pulumi.dev.yaml
 package-lock.json
 pnpm-lock.yaml
+Pulumi.dev.yaml
 yarn.lock
