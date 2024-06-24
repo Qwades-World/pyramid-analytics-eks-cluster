@@ -93,7 +93,6 @@ export const awsGCADInstance = new aws.ec2.Instance("pyramid-gcad-instance", {
   disableApiStop: false,
   disableApiTermination: true,
   ebsOptimized: true,
-  getPasswordData : true,
   instanceType: "t3.2xlarge",
   keyName: ec2KeyName,
   metadataOptions: {
@@ -129,7 +128,6 @@ export const awsGCGROUPInstance = new aws.ec2.Instance("pyramid-gcgroup-instance
   disableApiStop: false,
   disableApiTermination: true,
   ebsOptimized: true,
-  getPasswordData: true,
   instanceType: "t3.2xlarge",
   keyName: ec2KeyName,
   metadataOptions: {
@@ -165,7 +163,6 @@ export const awsGCDEALERInstance = new aws.ec2.Instance("pyramid-gcdealers-insta
   disableApiStop: false,
   disableApiTermination: true,
   ebsOptimized: true,
-  getPasswordData: true,
   instanceType: "t3.2xlarge",
   keyName: ec2KeyName,
   metadataOptions: {

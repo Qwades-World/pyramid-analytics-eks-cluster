@@ -34,7 +34,7 @@ export const securityGroupRDS = new aws.ec2.SecurityGroup("pyramid-rds-sg", {
 
 // Create a security group that allows SSH and RDP access to the EC2 instances
 export const securityGroupEC2 = new aws.ec2.SecurityGroup("pyramid-ec2-sg", {
-    description: "Allow external SSH access to EC2",
+    description: "Allow external RDP and SSH access to EC2 instances",
     ingress: [
         { protocol: "tcp", fromPort: 22, toPort: 22, cidrBlocks: [extSshAccess] }, // Allow SSH access from the internet
         { protocol: "tcp", fromPort: 3389, toPort: 3389, cidrBlocks: [extSshAccess] }, // Allow RDP access from the internet
