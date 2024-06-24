@@ -93,6 +93,7 @@ export const awsGCADInstance = new aws.ec2.Instance("pyramid-gcad-instance", {
   disableApiStop: false,
   disableApiTermination: true,
   ebsOptimized: true,
+  getPasswordData : true,
   instanceType: "t3.2xlarge",
   keyName: ec2KeyName,
   metadataOptions: {
@@ -115,9 +116,6 @@ export const awsGCADInstance = new aws.ec2.Instance("pyramid-gcad-instance", {
     Name: "Pyramid Global Corp AD Instance",
     Environment: "production",
   },
-  userData: `powershell
-  net user Administrator ${winadminpassword} /add
-  `,
   vpcSecurityGroupIds: [securityGroupEC2.id],
 });
 
@@ -129,6 +127,7 @@ export const awsGCGROUPInstance = new aws.ec2.Instance("pyramid-gcgroup-instance
   disableApiStop: false,
   disableApiTermination: true,
   ebsOptimized: true,
+  getPasswordData: true,
   instanceType: "t3.2xlarge",
   keyName: ec2KeyName,
   metadataOptions: {
@@ -151,9 +150,6 @@ export const awsGCGROUPInstance = new aws.ec2.Instance("pyramid-gcgroup-instance
     Name: "Pyramid Global Group AD Instance",
     Environment: "production",
   },
-  userData: `powershell
-  net user Administrator ${winadminpassword} /add
-  `,
   vpcSecurityGroupIds: [securityGroupEC2.id],
 });
 
@@ -165,6 +161,7 @@ export const awsGCDEALERInstance = new aws.ec2.Instance("pyramid-gcdealers-insta
   disableApiStop: false,
   disableApiTermination: true,
   ebsOptimized: true,
+  getPasswordData: true,
   instanceType: "t3.2xlarge",
   keyName: ec2KeyName,
   metadataOptions: {
@@ -184,11 +181,8 @@ export const awsGCDEALERInstance = new aws.ec2.Instance("pyramid-gcdealers-insta
   },
   subnetId: eksVpc.publicSubnetIds[1],
   tags: {
-    Name: "Pyramid Global Corp AD Instance",
+    Name: "Pyramid Global Corp Dealership AD Instance",
     Environment: "production",
   },
-  userData: `powershell
-  net user Administrator ${winadminpassword} /add
-  `,
   vpcSecurityGroupIds: [securityGroupEC2.id],
 });
