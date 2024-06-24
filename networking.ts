@@ -37,6 +37,7 @@ export const securityGroupEC2 = new aws.ec2.SecurityGroup("pyramid-ec2-sg", {
     description: "Allow external SSH access to EC2",
     ingress: [
         { protocol: "tcp", fromPort: 22, toPort: 22, cidrBlocks: [extSshAccess] }, // Allow SSH access from the internet
+        { protocol: "rdp", fromPort: 3389, toPort: 3389, cidrBlocks: [extSshAccess] }, // Allow RDP access from the internet)
         { protocol: "-1", fromPort: 0, toPort: 0, cidrBlocks: [intSshAccess] }, // Allow network access from the internal network
     ],
     egress: [
