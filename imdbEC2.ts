@@ -1,12 +1,11 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
 import { eksVpc, securityGroupEC2 } from "./networking";
-import { userData } from "./userData";
+import { imdbUserData, winUserData } from "./userData";
 
 // Get the EC2 key name
 const config = new pulumi.Config();
 const ec2KeyName = config.get("ec2KeyName");
-const winadminpassword = config.get("winadminpassword");
 
 // Get the latest Ubuntu 20.04 AMI
 const ubuntu = aws.ec2.getAmi({
@@ -73,7 +72,8 @@ export const awsIMDBInstance = new aws.ec2.Instance("pyramid-imdb-instance", {
     Name: "Pyramid IMDB Instance",
     Environment: "production",
   },
-  userData: userData,
+  userData: imdbUserData,
+  userDataReplaceOnChange: true,
   vpcSecurityGroupIds: [securityGroupEC2.id],
 });
 
@@ -116,6 +116,8 @@ export const awsGCADInstance = new aws.ec2.Instance("pyramid-gcad-instance", {
     Name: "Pyramid Global Corp AD Instance",
     Environment: "production",
   },
+  userData: winUserData,
+  userDataReplaceOnChange: true,
   vpcSecurityGroupIds: [securityGroupEC2.id],
 });
 
@@ -150,6 +152,8 @@ export const awsGCGROUPInstance = new aws.ec2.Instance("pyramid-gcgroup-instance
     Name: "Pyramid Global Group AD Instance",
     Environment: "production",
   },
+  userData: winUserData,
+  userDataReplaceOnChange: true,
   vpcSecurityGroupIds: [securityGroupEC2.id],
 });
 
@@ -184,5 +188,7 @@ export const awsGCDEALERInstance = new aws.ec2.Instance("pyramid-gcdealers-insta
     Name: "Pyramid Global Corp Dealership AD Instance",
     Environment: "production",
   },
+  userData: winUserData,
+  userDataReplaceOnChange: true,
   vpcSecurityGroupIds: [securityGroupEC2.id],
 });
