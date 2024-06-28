@@ -3,7 +3,7 @@ import {
     awsGCADInstance,
     awsGCGROUPInstance,
     awsGCDEALERInstance
-} from "./imdbEC2";
+} from "./ec2Instances";
 
 import {
     eksCluster
