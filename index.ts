@@ -3,26 +3,24 @@ import {
     awsGCADInstance,
     awsGCGROUPInstance,
     awsGCDEALERInstance
-} from "./imdbEC2";
+} from "./ec2Instances";
+import { eksCluster } from "./eksCluster";
+import { eksVpc } from "./networking";
+import { rdsEndpoint, rdsPort } from "./rds";
 
-import {
-    eksCluster
-} from "./eksCluster";
+// Export EC2 instance public DNS names
+export const ec2PublicDns = {
+    gcadAdmin: awsGCADInstance.publicDns,
+    gcGroup: awsGCGROUPInstance.publicDns,
+    gcDealer: awsGCDEALERInstance.publicDns,
+    pyramidImdb: awsIMDBInstance.publicDns,
+};
 
-import {
-    eksVpc
-} from "./networking";
-
-import {
-    rds
-} from "./rds";
-
-// Export some values for use elsewhere
-export const gcadadminpasswd = awsGCADInstance.publicDns;
-export const gcgroupadpasswd = awsGCDEALERInstance.publicDns;
-export const gcdealeradminpasswd = awsGCGROUPInstance.publicDns;
-export const ec2IMDBInstance = awsIMDBInstance.publicDns;
+// Export EKS cluster configuration
 export const kubeconfig = eksCluster.kubeconfig;
-export const rdsEndpoint = rds.endpoint;
-export const rdsPort = rds.port;
+
+// Export VPC ID
 export const vpcId = eksVpc.vpcId;
+
+// Re-export RDS endpoint and port
+export { rdsEndpoint, rdsPort };
