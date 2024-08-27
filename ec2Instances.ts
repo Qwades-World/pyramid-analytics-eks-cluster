@@ -36,15 +36,14 @@ const ebsVol = new aws.ebs.Volume("pyramid-imdb-001", {
 });
 
 // Enforce IMDSv2
-const enforce_imdsv2 = new aws.ec2.InstanceMetadataDefaults("enforce-imdsv2", {
+const enforceImdsv2 = new aws.ec2.InstanceMetadataDefaults("enforce-imdsv2", {
   httpTokens: "required",
   httpPutResponseHopLimit: 1,
   httpEndpoint: "enabled",
 });
 
-// Create EC2 instance for IMDB data
-export const awsIMDBInstance = new aws.ec2.Instance("pyramid-imdb-instance", {
-  ami: ubuntu.then((ubuntu) => ubuntu.id),
+// Common EC2 instance configuration
+const commonInstanceConfigLinux = {
   associatePublicIpAddress: true,
   availabilityZone: "us-east-1b",
   disableApiStop: false,
@@ -57,6 +56,33 @@ export const awsIMDBInstance = new aws.ec2.Instance("pyramid-imdb-instance", {
     httpTokens: "required",
   },
   monitoring: true,
+  subnetId: eksVpc.publicSubnetIds[1],
+  userDataReplaceOnChange: true,
+  vpcSecurityGroupIds: [securityGroupEC2.id],
+};
+
+// Common EC2 instance configuration
+const commonInstanceConfigWindows = {
+  associatePublicIpAddress: true,
+  availabilityZone: "us-east-1b",
+  disableApiStop: false,
+  disableApiTermination: true,
+  ebsOptimized: true,
+  instanceType: "t3.2xlarge",
+  metadataOptions: {
+    httpEndpoint: "enabled",
+    httpTokens: "required",
+  },
+  monitoring: true,
+  subnetId: eksVpc.publicSubnetIds[1],
+  userDataReplaceOnChange: true,
+  vpcSecurityGroupIds: [securityGroupEC2.id],
+};
+
+// Create EC2 instance for IMDB data
+export const awsIMDBInstance = new aws.ec2.Instance("pyramid-imdb-instance", {
+  ...commonInstanceConfigLinux,
+  ami: ubuntu.then((ubuntu) => ubuntu.id),
   rootBlockDevice: {
     deleteOnTermination: true,
     encrypted: false,
@@ -67,14 +93,11 @@ export const awsIMDBInstance = new aws.ec2.Instance("pyramid-imdb-instance", {
     volumeSize: 50,
     volumeType: "gp3",
   },
-  subnetId: eksVpc.publicSubnetIds[1],
   tags: {
     Name: "Pyramid IMDB Instance",
     Environment: "production",
   },
   userData: imdbUserData,
-  userDataReplaceOnChange: true,
-  vpcSecurityGroupIds: [securityGroupEC2.id],
 });
 
 // Attach IMDB data volume to EC2 instance
@@ -85,107 +108,30 @@ export const ebsAtt = new aws.ec2.VolumeAttachment("pyramid-imdb-001-attach", {
   volumeId: ebsVol.id,
 });
 
-// Create GCCorp AD instance 
-export const awsGCADInstance = new aws.ec2.Instance("pyramid-gcad-instance", {
-  ami: "ami-04df9ee4d3dfde202",
-  associatePublicIpAddress: true,
-  availabilityZone: "us-east-1b",
-  disableApiStop: false,
-  disableApiTermination: true,
-  ebsOptimized: true,
-  instanceType: "t3.2xlarge",
-  keyName: ec2KeyName,
-  metadataOptions: {
-    httpEndpoint: "enabled",
-    httpTokens: "required",
-  },
-  monitoring: true,
-  rootBlockDevice: {
-    deleteOnTermination: true,
-    encrypted: false,
-    tags: {
-      Environment: "production",
-      Name: "Pyramid-Root-Volume-GCAD-001",
+// Function to create Windows AD instances
+const createWindowsADInstance = (name: string, displayName: string) => {
+  return new aws.ec2.Instance(`pyramid-${name}-instance`, {
+    ...commonInstanceConfigWindows,
+    ami: "ami-04df9ee4d3dfde202",
+    rootBlockDevice: {
+      deleteOnTermination: true,
+      encrypted: false,
+      tags: {
+        Environment: "production",
+        Name: `Pyramid-Root-Volume-${name.toUpperCase()}-001`,
+      },
+      volumeSize: 100,
+      volumeType: "gp3",
     },
-    volumeSize: 100,
-    volumeType: "gp3",
-  },
-  subnetId: eksVpc.publicSubnetIds[1],
-  tags: {
-    Name: "Pyramid Global Corp AD Instance",
-    Environment: "production",
-  },
-  userData: winUserData,
-  userDataReplaceOnChange: true,
-  vpcSecurityGroupIds: [securityGroupEC2.id],
-});
+    tags: {
+      Name: displayName,
+      Environment: "production",
+    },
+    userData: winUserData,
+  });
+};
 
-// Create GCGroup AD instance 
-export const awsGCGROUPInstance = new aws.ec2.Instance("pyramid-gcgroup-instance", {
-  ami: "ami-04df9ee4d3dfde202",
-  associatePublicIpAddress: true,
-  availabilityZone: "us-east-1b",
-  disableApiStop: false,
-  disableApiTermination: true,
-  ebsOptimized: true,
-  instanceType: "t3.2xlarge",
-  keyName: ec2KeyName,
-  metadataOptions: {
-    httpEndpoint: "enabled",
-    httpTokens: "required",
-  },
-  monitoring: true,
-  rootBlockDevice: {
-    deleteOnTermination: true,
-    encrypted: false,
-    tags: {
-      Environment: "production",
-      Name: "Pyramid-Root-Volume-GCGROUP-001",
-    },
-    volumeSize: 100,
-    volumeType: "gp3",
-  },
-  subnetId: eksVpc.publicSubnetIds[1],
-  tags: {
-    Name: "Pyramid Global Group AD Instance",
-    Environment: "production",
-  },
-  userData: winUserData,
-  userDataReplaceOnChange: true,
-  vpcSecurityGroupIds: [securityGroupEC2.id],
-});
-
-// Create GCDealers AD instance 
-export const awsGCDEALERInstance = new aws.ec2.Instance("pyramid-gcdealers-instance", {
-  ami: "ami-04df9ee4d3dfde202",
-  associatePublicIpAddress: true,
-  availabilityZone: "us-east-1b",
-  disableApiStop: false,
-  disableApiTermination: true,
-  ebsOptimized: true,
-  instanceType: "t3.2xlarge",
-  keyName: ec2KeyName,
-  metadataOptions: {
-    httpEndpoint: "enabled",
-    httpTokens: "required",
-  },
-  monitoring: true,
-  rootBlockDevice: {
-    deleteOnTermination: true,
-    encrypted: false,
-    tags: {
-      Environment: "production",
-      Name: "Pyramid-Root-Volume-GCDEALERS-001",
-    },
-    volumeSize: 100,
-    volumeType: "gp3",
-  },
-  subnetId: eksVpc.publicSubnetIds[1],
-  tags: {
-    Name: "Pyramid Global Corp Dealership AD Instance",
-    Environment: "production",
-  },
-  userData: winUserData,
-  userDataReplaceOnChange: true,
-  vpcSecurityGroupIds: [securityGroupEC2.id],
-});
+// Create AD instances
+export const awsGCADInstance = createWindowsADInstance("gcad", "Pyramid Global Corp AD Instance");
+export const awsGCGROUPInstance = createWindowsADInstance("gcgroup", "Pyramid Global Group AD Instance");
+export const awsGCDEALERInstance = createWindowsADInstance("gcdealers", "Pyramid Global Corp Dealership AD Instance");
